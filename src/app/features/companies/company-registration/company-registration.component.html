@@ -1,1 +1,113 @@
-<p>company-registration works!</p>
+<div class="container mt-4">
+  <form [formGroup]="cadastroForm" (ngSubmit)="createEntry()">
+    <div class="row">
+      <div class="col-md-5">
+        <h5 class="text-secondary">Dados do solicitante</h5>
+        <div class="mb-3">
+          <label class="form-label"><b>Responsável pela empresa*</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="responsavel"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>CPF*</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="cpf"
+            placeholder="999.999.999-99"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Data nascimento*</b></label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="dataNascimento"
+          />
+        </div>
+
+        <h5>Dados da empresa</h5>
+        <div class="mb-3">
+          <label class="form-label"><b>Nome fantasia*</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="nomeFantasia"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"
+            ><b>Escolha sua entidade de registro*</b></label
+          >
+          <div *ngFor="let entidade of entidadesRegistro" class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              [value]="entidade"
+              formControlName="entidadeRegistro"
+            />
+            <label class="form-check-label">{{ entidade }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-auto">
+        <div class="divider-vertical"></div>
+      </div>
+
+      <div class="col-md-5">
+        <h5 class="text-secondary">Endereço da empresa</h5>
+        <div class="mb-3">
+          <label class="form-label"><b>CEP*</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="cep"
+            placeholder="99999-999"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Endereço*</b></label>
+          <input type="text" class="form-control" formControlName="endereco" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Bairro*</b></label>
+          <input type="text" class="form-control" formControlName="bairro" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Complemento</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="complemento"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Cidade*</b></label>
+          <input type="text" class="form-control" formControlName="cidade" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><b>Estado*</b></label>
+          <select class="form-select" formControlName="estado">
+            <option value="">Selecione</option>
+            <option *ngFor="let estado of estados" [value]="estado">
+              {{ estado }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-3 d-flex justify-content-end gap-2 p-3">
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        Voltar
+      </button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-send"></i> Enviar
+      </button>
+    </div>
+  </form>
+</div>
