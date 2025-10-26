@@ -9,54 +9,20 @@ import { CompanyService } from '../../../core/services/company.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './company-list.component.html',
-  styleUrl: './company-list.component.scss'
+  styleUrl: './company-list.component.scss',
 })
 export class CompanyListComponent {
-orders: any[] = [
-    {
-      id: 1,
-      responsible: 'Fulano de tal',
-      companyName: 'Nome da empresa',
-      cpf: '999.999.999-99',
-      address: 'Nome da rua',
-      neighborhood: 'Nome do bairro',
-      city: 'Nome da cidade',
-      cep: '99999-999',
-      complement: 'Complemento',
-      uf: 'PB',
-      number: '123',
-    },
-    {
-      id: 1,
-      responsible: 'Fulano de tal',
-      companyName: 'Nome da empresa',
-      cpf: '999.999.999-99',
-      address: 'Nome da rua',
-      neighborhood: 'Nome do bairro',
-      city: 'Nome da cidade',
-      cep: '99999-999',
-      complement: 'Complemento',
-      uf: 'PB',
-      number: '123',
-    },
-    {
-      id: 1,
-      responsible: 'Fulano de tal',
-      companyName: 'Nome da empresa',
-      cpf: '999.999.999-99',
-      address: 'Nome da rua',
-      neighborhood: 'Nome do bairro',
-      city: 'Nome da cidade',
-      cep: '99999-999',
-      complement: 'Complemento',
-      uf: 'PB',
-      number: '123',
-    }
-  ];
-  editing = false;
+  editing: boolean = false;
   selectedOrder: any | null = null;
+  orders: any[] = [];
+  entidadeRegistro = [
+    { key: 107305, value: 'Cartório' },
+    { key: 107306, value: 'Junta Comercial' },
+    { key: 107308, value: 'OAB' },
+    { key: 107309, value: 'RFB' },
+  ];
 
-  private router = inject(Router);
+  public router = inject(Router);
   private companyService = inject(CompanyService);
   private destroy$ = new Subject<void>();
   ngOnInit() {
@@ -69,10 +35,10 @@ orders: any[] = [
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          //this.orders = data ?? [];
-          console.log('Companies loaded:', data);
+          this.orders = data ?? [];
         },
         error: (err) => {
+          this.orders = [];
           console.error('Error loading companies:', err);
         },
       });
@@ -87,6 +53,28 @@ orders: any[] = [
     if (order && order.id) {
       this.router.navigate(['/company-registration', order.id]);
     }
+  }
+
+  formatCpf(cpf?: string): string {
+    return cpf?.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') ?? '-';
+  }
+
+  formatCep(cep?: number | string): string {
+    if (!cep) return '-';
+    const s = cep.toString().padStart(8, '0');
+    return s.replace(/^(\d{5})(\d{3})$/, '$1-$2');
+  }
+
+  formatDate(dateStr?: string): string {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  getEntidadeName(key?: number): string {
+    return this.entidadeRegistro.find((e) => e.key === key)?.value ?? '-';
   }
 
   ngOnDestroy(): void {
