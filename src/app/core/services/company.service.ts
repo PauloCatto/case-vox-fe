@@ -7,24 +7,26 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class CompanyService {
-  constructor() {}
-
   private http = inject(HttpClient);
-  private url: string = environment.companies;
+  private env = environment;
 
   getCompanies(): Observable<any[]> {
-    return this.http.get<any[]>(this.url);
+    return this.http.get<any[]>(this.env.companies);
   }
 
   getCompanyById(id: number | string): Observable<any> {
-    return this.http.get<any>(`${this.url}/${id}`);
+    return this.http.get<any>(`${this.env.companies}/${id}`);
   }
 
   createCompany(company: any): Observable<any> {
-    return this.http.post<any>(this.url, company);
+    return this.http.post<any>(this.env.companies, company);
   }
 
   updateCompany(id: number | string, company: any): Observable<any> {
-    return this.http.put<any>(`${this.url}/${id}`, company);
+    return this.http.put<any>(`${this.env.companies}/${id}`, company);
+  }
+
+  getEntitiesRegistry(): Observable<any[]> {
+    return this.http.get<any[]>(this.env.entitiesRegistry);
   }
 }
