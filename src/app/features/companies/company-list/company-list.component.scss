@@ -1,0 +1,19 @@
+.company-text {
+ min-width: 0; 
+  display: flex;
+  flex-direction: column;
+
+  strong,
+  small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.btn {
+    margin-left: 5px;
+}
+button {
+  min-width: fit-content;
+}

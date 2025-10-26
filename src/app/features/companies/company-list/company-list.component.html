@@ -1,1 +1,58 @@
-<p>company-list works!</p>
+<div class="container mt-4" >
+  <div class="row position-relative">
+    <div class="col-md-5">
+      <div
+        class="card mb-3"
+        *ngFor="let order of orders"
+      >
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar bg-secondary rounded-circle d-flex justify-content-center align-items-center" style="width:40px; height:40px;">
+              <i class="bi bi-person-fill text-white"></i>
+            </div>
+            <div>
+              <strong>{{ order.responsible }}</strong><br />
+              <small>{{ order.companyName }}</small>
+            </div>
+          </div>
+          <button class="btn btn-primary" (click)="viewOrder(order)">
+            <i class="bi bi-eye me-1"></i> Visualizar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <div [ngClass]="{'divider-vertical': editing}"></div>
+    </div>
+
+    <!-- Detalhes do pedido -->
+    <div class="col-md-5" *ngIf="selectedOrder">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Detalhes do pedido</h4>
+        <button class="btn btn-dark" (click)="editOrder(selectedOrder)">
+          <i class="bi bi-pencil-square me-1"></i> Editar
+        </button>
+      </div>
+      <div class="card p-3">
+        <div class="d-flex align-items-center mb-3">
+          <div class="avatar bg-secondary rounded-circle d-flex justify-content-center align-items-center" style="width:40px; height:40px;">
+            <i class="bi bi-person-fill text-white"></i>
+          </div>
+          <h5 class="ms-2 mb-0">{{ selectedOrder.companyName }}</h5>
+        </div>
+        <ul class="list-unstyled mb-0">
+          <li><strong>Responsável:</strong> {{ selectedOrder.responsible }}</li>
+          <li><strong>CPF:</strong> {{ selectedOrder.cpf }}</li>
+          <li><strong>Endereço:</strong> {{ selectedOrder.address }}</li>
+          <li><strong>Bairro:</strong> {{ selectedOrder.neighborhood }}</li>
+          <li><strong>Cidade:</strong> {{ selectedOrder.city }}</li>
+          <li><strong>CEP:</strong> {{ selectedOrder.cep }}</li>
+          <li><strong>Complemento:</strong> {{ selectedOrder.complement }}</li>
+          <li><strong>UF:</strong> {{ selectedOrder.uf }}</li>
+          <li><strong>Número:</strong> {{ selectedOrder.number }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
