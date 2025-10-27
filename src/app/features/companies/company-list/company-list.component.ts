@@ -7,6 +7,7 @@ import {
   Company,
   EntityRegistry,
 } from '../../../shared/interfaces/company.interfaces';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-company-list',
@@ -28,6 +29,7 @@ export class CompanyListComponent implements OnInit {
   ];
 
   public router = inject(Router);
+  private toastService = inject(ToastService);
   private companyService = inject(CompanyService);
   private destroy$ = new Subject<void>();
   ngOnInit(): void {
@@ -49,7 +51,10 @@ export class CompanyListComponent implements OnInit {
       },
       error: (err) => {
         this.orders = [];
-        console.error('Error loading companies:', err);
+        console.error('Erro ao carregar empresas');
+         this.toastService.error(
+          'Erro ao carregar empresas. Por favor, tente novamente.'
+        );
       },
     });
 }

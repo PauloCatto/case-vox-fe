@@ -1,7 +1,16 @@
+<div *ngIf="loadingForm" class="text-center my-3">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 <div class="container mt-4">
-  <form [formGroup]="cadastroForm" (ngSubmit)="createEntry()">
+  <form
+    [formGroup]="cadastroForm"
+    [class.disabled]="loadingForm"
+    (ngSubmit)="onSubmit()"
+  >
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-md-5 col-12 mb-3 mb-md-0">
         <h5 class="text-secondary">Dados do solicitante</h5>
 
         <div class="mb-3">
@@ -65,6 +74,7 @@
             type="date"
             class="form-control"
             formControlName="dataNascimento"
+            [max]="today"
             [ngClass]="{
               'is-invalid':
                 controls['dataNascimento'].invalid &&
@@ -116,7 +126,7 @@
           <label class="form-label"
             ><b>Escolha sua entidade de registro*</b></label
           >
-          <div class="form-check" *ngFor="let entidade of entidadesRegistro">
+          <div class="form-check" *ngFor="let entidade of entitiesRegistry">
             <input
               class="form-check-input"
               type="radio"
@@ -144,11 +154,17 @@
         </div>
       </div>
 
-      <div class="col-auto">
+      <div
+        class="col-auto"
+        [ngClass]="{
+          'divider-margin': true,
+          'd-none d-lg-flex': true
+        }"
+      >
         <div class="divider-vertical"></div>
       </div>
 
-      <div class="col-md-5">
+      <div class="col-md-5 col-12">
         <h5 class="text-secondary">Endereço da empresa</h5>
 
         <div class="mb-3">
@@ -204,6 +220,28 @@
         </div>
 
         <div class="mb-3">
+          <label class="form-label"><b>Número*</b></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="numero"
+            [ngClass]="{
+              'is-invalid':
+                controls['numero'].invalid &&
+                (controls['numero'].touched || controls['numero'].dirty)
+            }"
+          />
+          <div
+            *ngIf="controls['numero'].invalid && controls['numero'].touched"
+            class="invalid-feedback d-block"
+          >
+            <div *ngIf="controls['numero'].errors?.['required']">
+              O Número é obrigatório.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label"><b>Bairro*</b></label>
           <input
             type="text"
@@ -235,28 +273,6 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label"><b>Cidade*</b></label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="cidade"
-            [ngClass]="{
-              'is-invalid':
-                controls['cidade'].invalid &&
-                (controls['cidade'].touched || controls['cidade'].dirty)
-            }"
-          />
-          <div
-            *ngIf="controls['cidade'].invalid && controls['cidade'].touched"
-            class="invalid-feedback d-block"
-          >
-            <div *ngIf="controls['cidade'].errors?.['required']">
-              A Cidade é obrigatória.
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-3">
           <label class="form-label"><b>Estado*</b></label>
           <select
             class="form-select"
@@ -267,8 +283,8 @@
             }"
           >
             <option value="">Selecione</option>
-            <option *ngFor="let estado of estados" [value]="estado">
-              {{ estado }}
+            <option *ngFor="let estado of states" [value]="estado.sigla">
+              {{ estado.sigla }}
             </option>
           </select>
           <div
@@ -277,6 +293,42 @@
           >
             <div *ngIf="controls['estado'].errors?.['required']">
               O Estado é obrigatório.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><b>Cidade*</b></label>
+          <select
+            class="form-select"
+            formControlName="cidade"
+            [disabled]="controls['cidade'].disabled || loadingCities"
+            [ngClass]="{
+              'is-invalid':
+                controls['cidade'].invalid && controls['cidade'].touched
+            }"
+          >
+            <option value="" *ngIf="!loadingCities">
+              Selecione uma cidade
+            </option>
+            <option value="" disabled *ngIf="loadingCities">
+              Carregando...
+            </option>
+
+            <option *ngFor="let cidade of cities" [value]="cidade.nome">
+              {{ cidade.nome }}
+            </option>
+          </select>
+          <div
+            *ngIf="controls['cidade'].invalid && controls['cidade'].touched"
+            class="invalid-feedback d-block"
+          >
+            <div *ngIf="controls['cidade'].errors?.['required']">
+              A Cidade é obrigatória.
+            </div>
+
+            <div *ngIf="controls['cidade'].errors?.['cidadeObrigatoria']">
+              O estado foi alterado! Por favor selecione a cidade novamente.
             </div>
           </div>
         </div>
@@ -291,7 +343,10 @@
         type="submit"
         class="btn btn-primary"
         [disabled]="
-          (isEditMode && (cadastroForm.invalid || cadastroForm.pristine)) ||
+          (isEditMode &&
+            (cadastroForm.invalid ||
+              cadastroForm.pristine ||
+              !controls['cidade'].value)) ||
           (!isEditMode && cadastroForm.invalid)
         "
       >
