@@ -1,27 +1,131 @@
-# VoxTecnologia
+📌 Case Vox — Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Aplicação para gestão e cadastro de empresas.
+Voltada para qualidade de código, experiência do usuário, formulários reativos, integrações externas e testes unitários.
 
-## Development server
+🚀 Como rodar o projeto
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+📥 Clone o repositório:
 
-## Code scaffolding
+git clone https://github.com/SEU_USUARIO/case-vox-frontend.git
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+📂 Entre na pasta:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+cd case-vox-frontend
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+📦 Instale as dependências:
 
-## Running end-to-end tests
+npm install --legacy-peer-deps
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+⚡ App + Mock API juntos:
 
-## Further help
+npm run dev
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+🧪 Rodar testes com coverage:
+
+npm test -- --code-coverage
+
+✅ Funcionalidades em Destaque
+<br>
+
+1️⃣ Formulário Reativo com Validações 🔍
+
+✔ Construído com FormBuilder + ReactiveFormsModule
+<br>
+✔ Mensagens de erro inteligentes e reativas
+<br>
+✔ Validações completas:
+
+CPF → 11 dígitos
+
+CEP → 8 dígitos
+
+Datas e campos obrigatórios com feedback visual
+<br>
+✔ Função onlyNumbers() → protege entrada e formato no input
+
+2️⃣ Modo de Edição e Criação em Uma Tela ✨
+<br>
+<br>
+✔ Detecta via parâmetro id da rota
+<br>
+✔ Em edição:
+
+Carrega dados via getCompanyById()
+
+Mantém pristine/untouched após popular o formulário
+<br>
+✔ Lógica centralizada para:
+
+createCompany()
+
+updateCompany()
+
+3️⃣ Integração com API do IBGE 🗺️
+
+✔ Carrega estados na inicialização
+<br>
+✔ Carrega cidades reativamente conforme o estado
+<br>
+✔ Campo cidade desabilitado até seleção do estado
+<br>
+✔ Loading dedicado (loadingCities)
+<br>
+<br>
+4️⃣ UX aprimorado com Loadings 🌀
+<br>
+<br>
+✅ Indicadores visuais durante requisições
+<br>
+✅ Spinner profissional e centralizado na tela:
+
+5️⃣ Criação e Atualização Organizadas 🧩
+<br>
+<br>
+✔ mapFormToPayload() → garante estrutura correta remota
+<br>
+✔ Feedback via ToastService
+<br>
+✔ Redirecionamento claro e fluido após envio
+<br>
+
+6️⃣ Navegação Segura 🛡
+<br>
+<br>
+✔ goBack() com confirmação → previne perda acidental
+<br>
+✔ SPA real usando Router
+
+7️⃣ Boas Práticas Angular ✅
+
+Standalone Components
+
+inject() no lugar de constructor
+
+Limpeza de observables com takeUntil + ngOnDestroy
+
+finalize() garantindo estado seguro mesmo em erro
+
+🧪 Testes Unitários (Jasmine + Karma)
+
+Cobertura:
+
+Cenário	Coberto ✅
+<br>
+Criação de empresa	✅
+<br>
+Validação de formulários	✅
+<br>
+Integração IBGE (estados/cidades)	✅
+<br>
+Serviços (mock via spyOn)	✅
+<br>
+Feedback visual com Toasts	✅
+<br>
+
+<br>
+<img width="1021" height="682" alt="Captura de tela 2025-10-27 015943" src="https://github.com/user-attachments/assets/89f8fe19-e08b-4247-ae6c-4a165dc1600a" />
+<br>
