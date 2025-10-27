@@ -7,7 +7,7 @@ Voltada para qualidade de código, experiência do usuário, formulários reativ
 
 📥 Clone o repositório:
 
-git clone https://github.com/SEU_USUARIO/case-vox-frontend.git
+git clone https://github.com/PauloCatto/case-vox-fe.git
 
 
 📂 Entre na pasta:
