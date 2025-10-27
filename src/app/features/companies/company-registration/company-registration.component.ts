@@ -40,6 +40,7 @@ export class CompanyRegistrationComponent implements OnInit, OnDestroy {
   private companyService = inject(CompanyService);
   private ibgeService = inject(IbgeService);
   private toastService = inject(ToastService);
+  
   ngOnInit(): void {
     this.initializeForm();
     this.getEntitiesRegistry();

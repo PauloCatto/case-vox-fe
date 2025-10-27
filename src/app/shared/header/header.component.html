@@ -13,7 +13,7 @@
         class="content-between ms-4 d-flex align-items-center justify-content-between w-100"
       >
         <h2 class="title">Solicitar Abertura de empresa</h2>
-        <div class="btn-container" *ngIf="showOpenButton">
+        <div class="btn-container" *ngIf="showOpenButton && !disableButton">
           <button
             type="button"
             class="btn btn-primary d-flex align-items-center px-3 py-2"

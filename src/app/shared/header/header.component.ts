@@ -1,25 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
+import { CompanyService } from '../../core/services/company.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   showOpenButton: boolean = true;
+  disableButton: boolean = true;
 
   private router = inject(Router);
+  private companyService = inject(CompanyService);
+  private destroy$ = new Subject<void>();
 
-  constructor() {}
   ngOnInit(): void {
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => this.updateOpenButtonVisibility());
+
+    this.companyService.companies$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(companies => {
+        this.disableButton = companies.length === 0;
+      });
+
+    this.companyService.fetchCompanies();
   }
 
   updateOpenButtonVisibility(): void {
@@ -29,5 +40,10 @@ export class HeaderComponent {
 
   openForm(): void {
     this.router.navigate(['/company-registration']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
