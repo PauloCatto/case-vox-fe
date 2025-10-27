@@ -1,11 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { CompanyService } from './core/services/company.service';
+import { of } from 'rxjs';
 
 describe('AppComponent', () => {
+  let companyServiceSpy: jasmine.SpyObj<CompanyService>;
+
   beforeEach(async () => {
+    companyServiceSpy = jasmine.createSpyObj(
+      'CompanyService',
+      ['fetchCompanies'],
+      {
+        companies$: of([]),
+      }
+    );
+
     await TestBed.configureTestingModule({
       imports: [AppComponent, RouterTestingModule],
+      providers: [{ provide: CompanyService, useValue: companyServiceSpy }],
     }).compileComponents();
   });
 
