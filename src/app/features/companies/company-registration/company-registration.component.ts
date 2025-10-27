@@ -125,7 +125,7 @@ export class CompanyRegistrationComponent implements OnInit, OnDestroy {
       });
   }
 
-  private setupCityControl(): void {
+  public setupCityControl(): void {
     const cityControl = this.cadastroForm.get('cidade');
     const stateControl = this.cadastroForm.get('estado');
 
@@ -152,7 +152,7 @@ export class CompanyRegistrationComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadCities(uf: string, selectedCity?: string) {
+  public loadCities(uf: string, selectedCity?: string) {
     this.loadingCities = true;
     this.ibgeService
       .getCitiesByState(uf)

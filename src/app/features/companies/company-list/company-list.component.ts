@@ -31,7 +31,7 @@ export class CompanyListComponent implements OnInit {
   public router = inject(Router);
   private toastService = inject(ToastService);
   private companyService = inject(CompanyService);
-  private destroy$ = new Subject<void>();
+  public destroy$ = new Subject<void>();
   ngOnInit(): void {
     this.getCompanies();
   }

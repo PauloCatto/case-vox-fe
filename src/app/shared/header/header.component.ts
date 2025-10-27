@@ -8,12 +8,13 @@ import { filter } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
- private router = inject(Router);
-
   showOpenButton: boolean = true;
+
+  private router = inject(Router);
+
   constructor() {}
   ngOnInit(): void {
     this.router.events
@@ -26,7 +27,7 @@ export class HeaderComponent {
     this.showOpenButton = !url.includes('company-registration');
   }
 
-  openForm() {
+  openForm(): void {
     this.router.navigate(['/company-registration']);
   }
 }
