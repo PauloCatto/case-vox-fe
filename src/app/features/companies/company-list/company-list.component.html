@@ -1,5 +1,11 @@
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
 <div class="container mt-4">
-  <div class="row g-3" *ngIf="orders.length > 0; else emptyState">
+  <div class="row g-3" *ngIf="!loading && orders.length > 0; else emptyState">
     <div
       [ngClass]="selectedOrder ? 'col-12 col-lg-6' : 'col-12'"
       class="order-list"
@@ -20,10 +26,10 @@
               </div>
               <div class="flex-grow-1 overflow-hidden">
                 <strong class="text-truncate d-block">{{
-                  order.solicitante?.ds_responsavel
+                  order.solicitante.ds_responsavel
                 }}</strong>
                 <small class="text-truncate d-block">{{
-                  order.empresa?.ds_nome_fantasia
+                  order.empresa.ds_nome_fantasia
                 }}</small>
               </div>
             </div>
@@ -64,51 +70,52 @@
         <ul class="list-unstyled mb-0">
           <li>
             <strong>Responsável:</strong>
-            {{ selectedOrder.solicitante?.ds_responsavel || "-" }}
+            {{ selectedOrder.solicitante.ds_responsavel || "-" }}
           </li>
           <li>
             <strong>CPF:</strong>
-            {{ formatCpf(selectedOrder.solicitante?.nu_cpf) }}
+            {{ formatCpf(selectedOrder.solicitante.nu_cpf) }}
           </li>
           <li>
             <strong>Data Nascimento:</strong>
-            {{ formatDate(selectedOrder.solicitante?.date_nascimento) }}
+            {{ formatDate(selectedOrder.solicitante.date_nascimento) }}
           </li>
           <li>
             <strong>Nome Fantasia:</strong>
-            {{ selectedOrder.empresa?.ds_nome_fantasia || "-" }}
+            {{ selectedOrder.empresa.ds_nome_fantasia || "-" }}
           </li>
           <li>
             <strong>Entidade Registro:</strong>
-            {{ getEntidadeName(selectedOrder.empresa?.co_entidade_registro) }}
+            {{ getEntityName(selectedOrder.empresa.co_entidade_registro) }}
           </li>
           <li>
             <strong>Endereço:</strong>
-            {{ selectedOrder.empresa?.endereco?.ds_logradouro || "-" }}
+            {{ selectedOrder.empresa.endereco.ds_logradouro || "-" }}
           </li>
           <li>
             <strong>Número:</strong>
-            {{ selectedOrder.empresa?.endereco?.co_numero || "-" }}
+            {{ selectedOrder.empresa.endereco.co_numero || "-" }}
           </li>
-          <li>
+          <li *ngIf="selectedOrder.empresa?.endereco?.ds_complemento?.trim()">
             <strong>Complemento:</strong>
-            {{ selectedOrder.empresa?.endereco?.ds_complemento || "-" }}
+            {{ selectedOrder.empresa.endereco.ds_complemento }}
           </li>
+
           <li>
             <strong>Bairro:</strong>
-            {{ selectedOrder.empresa?.endereco?.ds_bairro || "-" }}
+            {{ selectedOrder.empresa.endereco.ds_bairro || "-" }}
           </li>
           <li>
             <strong>Cidade:</strong>
-            {{ selectedOrder.empresa?.endereco?.ds_municipio || "-" }}
+            {{ selectedOrder.empresa.endereco.ds_municipio || "-" }}
           </li>
           <li>
             <strong>UF:</strong>
-            {{ selectedOrder.empresa?.endereco?.ds_uf || "-" }}
+            {{ selectedOrder.empresa.endereco.ds_uf || "-" }}
           </li>
           <li>
             <strong>CEP:</strong>
-            {{ formatCep(selectedOrder.empresa?.endereco?.co_cep) }}
+            {{ formatCep(selectedOrder.empresa.endereco.co_cep) }}
           </li>
         </ul>
       </div>

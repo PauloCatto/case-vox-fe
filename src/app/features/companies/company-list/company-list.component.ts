@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { CompanyService } from '../../../core/services/company.service';
+import {
+  Company,
+  EntityRegistry,
+} from '../../../shared/interfaces/company.interfaces';
 
 @Component({
   selector: 'app-company-list',
@@ -11,11 +15,12 @@ import { CompanyService } from '../../../core/services/company.service';
   templateUrl: './company-list.component.html',
   styleUrl: './company-list.component.scss',
 })
-export class CompanyListComponent {
+export class CompanyListComponent implements OnInit {
   editing: boolean = false;
-  selectedOrder: any | null = null;
-  orders: any[] = [];
-  entidadeRegistro = [
+  loading: boolean = false;
+  selectedOrder: Company | null = null;
+  orders: Company[] = [];
+  entidadeRegistro: EntityRegistry[] = [
     { key: 107305, value: 'Cartório' },
     { key: 107306, value: 'Junta Comercial' },
     { key: 107308, value: 'OAB' },
@@ -25,31 +30,36 @@ export class CompanyListComponent {
   public router = inject(Router);
   private companyService = inject(CompanyService);
   private destroy$ = new Subject<void>();
-  ngOnInit() {
+  ngOnInit(): void {
     this.getCompanies();
   }
 
   getCompanies(): void {
-    this.companyService
-      .getCompanies()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.orders = data ?? [];
-        },
-        error: (err) => {
-          this.orders = [];
-          console.error('Error loading companies:', err);
-        },
-      });
-  }
+  this.loading = true;
 
-  viewOrder(order: any) {
+  this.companyService
+    .getCompanies()
+    .pipe(
+      takeUntil(this.destroy$),
+      finalize(() => (this.loading = false))
+    )
+    .subscribe({
+      next: (data: Company[]) => {
+        this.orders = data ?? [];
+      },
+      error: (err) => {
+        this.orders = [];
+        console.error('Error loading companies:', err);
+      },
+    });
+}
+
+  viewOrder(order: Company): void {
     this.selectedOrder = order;
     this.editing = true;
   }
 
-  editOrder(order: any) {
+  editOrder(order: Company): void{
     if (order && order.id) {
       this.router.navigate(['/company-registration', order.id]);
     }
@@ -73,8 +83,10 @@ export class CompanyListComponent {
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  getEntidadeName(key?: number): string {
-    return this.entidadeRegistro.find((e) => e.key === key)?.value ?? '-';
+  getEntityName(value?: string | number): string {
+    if (!value) return '';
+    const entidade = this.entidadeRegistro.find((e) => e.value === value);
+    return entidade ? entidade.value : '-';
   }
 
   ngOnDestroy(): void {
