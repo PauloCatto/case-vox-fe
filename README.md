@@ -92,14 +92,26 @@ updateCompany()
 ✔ Redirecionamento claro e fluido após envio
 <br>
 
-6️⃣ Navegação Segura 🛡
+6️⃣ Deletar Empresas 🗑️
+<br>
+✔ Funcionalidade de exclusão de empresas diretamente da lista
+<br>
+✔ Confirmação antes de deletar para evitar remoções acidentais
+<br>
+✔ Atualiza a UI em tempo real após exclusão
+<br>
+✔ Feedback visual via ToastService após sucesso ou falha
+<br>
+
+7️⃣ Navegação Segura 🛡
 <br>
 <br>
 ✔ goBack() com confirmação → previne perda acidental
 <br>
 ✔ SPA real usando Router
-
-7️⃣ Boas Práticas Angular ✅
+<br>
+<br>
+8️⃣ Boas Práticas Angular ✅
 
 Standalone Components
 
