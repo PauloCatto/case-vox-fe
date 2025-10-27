@@ -33,9 +33,23 @@
                 }}</small>
               </div>
             </div>
-            <button class="btn btn-primary ms-2" (click)="viewOrder(order)">
-              <i class="bi bi-eye me-1"></i> Visualizar
-            </button>
+            <div class="d-flex">
+              <button
+                class="btn btn-primary ms-2"
+                (click)="viewOrder(order)"
+                title="Visualizar"
+              >
+                <i class="bi bi-eye"></i>
+                <span class="d-none d-sm-inline ms-1">Visualizar</span>
+              </button>
+              <button
+                class="btn btn-danger ms-2"
+                (click)="deleteOrder(order); $event.stopPropagation()"
+                title="Excluir"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
       </ng-container>

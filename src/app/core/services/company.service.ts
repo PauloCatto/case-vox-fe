@@ -55,4 +55,17 @@ updateCompany(id: number | string, company: any): Observable<Company> {
         error: () => this.companiesSubject.next([]),
       });
   }
+
+  deleteCompany(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.env.companies}/${id}`).pipe(
+      tap(() => {
+        const currentCompanies = this.companiesSubject.getValue();
+        const updatedCompanies = currentCompanies.filter(
+          (company) => company.id !== id
+        );
+        this.companiesSubject.next(updatedCompanies);
+      })
+    );
+  }
+
 }

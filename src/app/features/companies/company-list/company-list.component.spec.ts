@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CompanyListComponent } from './company-list.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of, throwError } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 import { CompanyService } from '../../../core/services/company.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Company } from '../../../shared/interfaces/company.interfaces';
@@ -19,11 +19,16 @@ describe('CompanyListComponent', () => {
   let companyService: jasmine.SpyObj<CompanyService>;
   let toastService: jasmine.SpyObj<ToastService>;
   let router: Router;
+  let companiesSubject: BehaviorSubject<Company[]>;
 
   beforeEach(async () => {
+    companiesSubject = new BehaviorSubject<Company[]>([]);
     const companyServiceSpy = jasmine.createSpyObj('CompanyService', [
-      'getCompanies',
-    ]);
+      'fetchCompanies',
+      'deleteCompany',
+    ], {
+      companies$: companiesSubject.asObservable()
+    });
 
     await TestBed.configureTestingModule({
       imports: [CompanyListComponent, RouterTestingModule],
@@ -41,7 +46,6 @@ describe('CompanyListComponent', () => {
     toastService = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
     router = TestBed.inject(Router);
 
-    companyService.getCompanies.and.returnValue(of([]));
   });
 
   it('should create', () => {
@@ -49,9 +53,9 @@ describe('CompanyListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getCompanies on init', () => {
+  it('should call fetchCompanies on init', () => {
     fixture.detectChanges();
-    expect(companyService.getCompanies).toHaveBeenCalled();
+    expect(companyService.fetchCompanies).toHaveBeenCalled();
   });
 
   describe('getCompanies', () => {
@@ -59,43 +63,20 @@ describe('CompanyListComponent', () => {
       const mockCompanies: Company[] = [
         { id: '1', empresa: { ds_nome_fantasia: 'Test Co' } } as Company,
       ];
-      companyService.getCompanies.and.returnValue(of(mockCompanies));
+      companiesSubject.next(mockCompanies);
 
       component.getCompanies();
+      fixture.detectChanges();
 
-      expect(companyService.getCompanies).toHaveBeenCalled();
+      expect(companyService.fetchCompanies).toHaveBeenCalled();
       expect(component.orders).toEqual(mockCompanies);
-      expect(component.loading).toBeFalse();
     });
 
     it('should handle empty company list', () => {
-      companyService.getCompanies.and.returnValue(of([]));
+      companiesSubject.next([]);
       component.getCompanies();
+      fixture.detectChanges();
       expect(component.orders).toEqual([]);
-    });
-
-    it('should handle null response from service', () => {
-      companyService.getCompanies.and.returnValue(of(null as any));
-      component.getCompanies();
-      expect(component.orders).toEqual([]);
-    });
-
-    it('should handle error when loading companies', () => {
-      const errorResponse = new Error('Failed to load');
-      companyService.getCompanies.and.returnValue(
-        throwError(() => errorResponse)
-      );
-      spyOn(console, 'error');
-
-      component.getCompanies();
-
-      expect(companyService.getCompanies).toHaveBeenCalled();
-      expect(component.orders).toEqual([]);
-      expect(console.error).toHaveBeenCalledWith('Erro ao carregar empresas');
-      expect(toastService.error).toHaveBeenCalledWith(
-        'Erro ao carregar empresas. Por favor, tente novamente.'
-      );
-      expect(component.loading).toBeFalse();
     });
   });
 
@@ -107,6 +88,30 @@ describe('CompanyListComponent', () => {
     component.viewOrder(mockOrder);
     expect(component.selectedOrder).toBe(mockOrder);
     expect(component.editing).toBeTrue();
+  });
+
+  describe('deleteOrder', () => {
+    it('should call deleteCompany and show success toast on confirmation', () => {
+      const mockOrder: Company = { id: '1' } as Company;
+      companyService.deleteCompany.and.returnValue(of(void 0));
+      toastService.info.and.callFake((message, callback) => {
+        if (callback) {
+          callback();
+        }
+      });
+
+      component.deleteOrder(mockOrder);
+
+      expect(toastService.info).toHaveBeenCalledWith(
+        'Tem certeza que deseja excluir este pedido?',
+        jasmine.any(Function)
+      );
+      expect(companyService.deleteCompany).toHaveBeenCalledWith('1');
+      expect(toastService.success).toHaveBeenCalledWith(
+        'Pedido excluído com sucesso.'
+      );
+      expect(component.loading).toBeFalse();
+    });
   });
 
   describe('editOrder', () => {
