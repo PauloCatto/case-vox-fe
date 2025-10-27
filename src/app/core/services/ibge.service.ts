@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { State, City } from '../../shared/interfaces/ibge.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +13,11 @@ export class IbgeService {
 
   constructor() {}
 
-  getEstados(): Observable<any[]> {
-    return this.http.get<any[]>(this.url);
+  getStates(): Observable<State[]> {
+    return this.http.get<State[]>(this.url);
   }
 
-  getCitiesByState(uf: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.states}${uf}/municipios`);
+  getCitiesByState(uf: string): Observable<City[]> {
+    return this.http.get<City[]>(`${environment.states}${uf}/municipios`);
   }
 }
